@@ -19,9 +19,11 @@ def rnd_word(delka: int):
         word = random.choice(slova).upper()
     return word
 
+
+
+# TODO: odstranit rozlišování diakritiky
 def remove_diacritics(letter):
     return letter.translate(translation_table)
-
 translation_table = {
     ord("á"): ord("a"),
     ord("é"): ord("e"),
@@ -96,7 +98,7 @@ def main():
     slovo = rnd_word(delka)
     time.sleep(1)
     print("""Pamatuj, že tahle šibenice bohužel rozlišuje diakritiku.\n(u,ú,ů jsou různá písmena)""")
-    time.sleep(4)
+    time.sleep(3)
     os.system("clear")
     print("Jdeme na to!")
     time.sleep(2)
