@@ -1,0 +1,1 @@
+nápad: seřadit slova podle délky slov
