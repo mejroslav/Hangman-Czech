@@ -9,76 +9,81 @@ red = '\033[31m'
 green = '\033[32m'
 
 
-# vytvoření náhodného slova a hádanky
-def rnd_word(delka: int):
+translation_table = {
+    ord("Á"): ord("A"),
+    ord("É"): ord("E"),
+    ord("Ě"): ord("E"),
+    ord("Í"): ord("I"),
+    ord("Ó"): ord("O"),
+    ord("Ú"): ord("U"),
+    ord("Ů"): ord("U"),
+    ord("Ý"): ord("Y"),
+    ord("Š"): ord("C"),
+    ord("Ř"): ord("R"),
+    ord("Ž"): ord("Z"),
+    ord("Š"): ord("S"),
+    ord("Ť"): ord("T"),
+    ord("Ň"): ord("N"),
+    ord("Ď"): ord("D"),
+}
+
+def remove_diacritics(letter):
+    "remove hooks and dashes"
+    return letter.translate(translation_table)
+
+def rnd_word(length: int):
+    "creates new czech word of the given length"
     with open("slova.txt", "r") as file:
         slova = file.read()
     slova = slova.split("\n")
     word = ""
-    while len(word) != delka:
+    while len(word) != length: # keep guessing random word - need improvement!
         word = random.choice(slova).upper()
     return word
 
-
-
-# TODO: odstranit rozlišování diakritiky
-def remove_diacritics(letter):
-    return letter.translate(translation_table)
-translation_table = {
-    ord("á"): ord("a"),
-    ord("é"): ord("e"),
-    ord("í"): ord("i"),
-    ord("ó"): ord("o"),
-    ord("ú"): ord("u"),
-    ord("ů"): ord("u"),
-    ord("ý"): ord("y"),
-    ord("ě"): ord("e"),
-    ord("č"): ord("c"),
-    ord("ž"): ord("z"),
-    ord("š"): ord("s"),
-    ord("ť"): ord("t"),
-    ord("ň"): ord("n"),
-    ord("ď"): ord("d"),
-}
-
-
-
 def game(word, pokusy):
+
+    word = word.upper() # fixes trouble with small and big letters
     pokusy_zacatek = pokusy
-    word_letters = set(word) # písmena ve slově
-    used_letters = set() # písmena, co byla hádána
+    word_letters = set(remove_diacritics(word))
+    used_letters = set()
+
 
     while len(word_letters) > 0 and pokusy > 0:
-        os.system("clear") # čištění obrazovky na začátku
+        time.sleep(1)
+        os.system("clear")
+
         if pokusy == 1:
             print("Zbývá ti už jen poslední pokus!")
         elif pokusy == 2:
             print("Zbývají ti jenom 2 pokusy!")
         else:
             print(f"Zbývá ti {pokusy} pokusů.")
+
         print("Použitá písmena:", " ".join(used_letters))
-        word_list = [letter if letter in used_letters else "-" for letter in word] # nejzajímavější řádek v celém projektu!
+        word_list = [letter if remove_diacritics(letter) in used_letters else "-" for letter in word]
         print("Hádané slovo:", " ".join(word_list))
 
         user_letter = input("Hádej písmeno: ").upper()
-        if user_letter in used_letters:
+        user_letter_without_diacritics = remove_diacritics(user_letter)
+
+        if user_letter_without_diacritics in used_letters:
             print("Toto písmeno už jsi použil!")
-            time.sleep(1)
             continue
-        # pokud není v použitých písmenech
-        used_letters.add(user_letter)
-        if user_letter in word_letters:
-            word_letters.remove(user_letter)
+
+        # if not in used_letters:
+        used_letters.add(user_letter_without_diacritics)
+        if user_letter_without_diacritics in word_letters:
+            word_letters.remove(user_letter_without_diacritics)
             print(green + "Správně!" + reset) 
         else:
             pokusy -= 1
             print(red + "Špatně!" + reset)
-        time.sleep(1)
 
     print("Hádané slovo bylo:", word)
         
     if word_letters == set() and pokusy > 0:
-        print(green + "Vyhrál jsi! " + reset + f"Stačilo ti {pokusy_zacatek - pokusy} pokusů. Gratulujeme a tady máš klíčenku!")
+        print(green + "Vyhrál jsi! " + reset + f"Stačilo ti {pokusy_zacatek - pokusy} z {pokusy_zacatek} pokusů. Gratulujeme a tady máš klíčenku!")
     elif pokusy == 0:
         print("Bohužel ti došly pokusy. " + red + "Prohrál jsi!" + reset)
 
@@ -89,23 +94,32 @@ def main():
     os.system("clear")
     print(bold + orange + "Vítej u hry ŠIBENICE!" + reset)
     time.sleep(3)
-    os.system("clear")
+    
+    while True:
+        os.system("clear")
 
-    delka = int(input("Zadej, kolik písmen má mít hádané slovo: "))
-    pokusy = int(input("Zadej, kolik chceš mít pokusů: "))
-    time.sleep(1)
-    os.system("clear")
-    slovo = rnd_word(delka)
-    time.sleep(1)
-    print("""Pamatuj, že tahle šibenice bohužel rozlišuje diakritiku.\n(u,ú,ů jsou různá písmena)""")
-    time.sleep(3)
-    os.system("clear")
-    print("Jdeme na to!")
-    time.sleep(2)
-    os.system("clear")
-    game(slovo, pokusy)
+        length = int(input("Zadej, kolik písmen má mít hádané slovo: "))
+        pokusy = int(input("Zadej, kolik chceš mít pokusů: "))
+        time.sleep(1)
+        os.system("clear")
+        slovo = rnd_word(length)
+        time.sleep(1)
+        os.system("clear")
+        print("Jdeme na to!")
+        time.sleep(2)
+        os.system("clear")
+        game(slovo, pokusy)
+
+        while True:
+            again = input("Chceš hrát znovu? [a/n]").lower()
+            if again in {"n", "ne", "nn", "no"}:
+                print("Nashledanou někdy příště!")
+                exit()
+            elif again in {"a", "ano", "y", "yes"}:
+                break
+            else:
+                print("Zadej prosím odpověď ('a' = ano, 'n' = ne).")
+
 
 if __name__ == '__main__':
     main()
-
-
