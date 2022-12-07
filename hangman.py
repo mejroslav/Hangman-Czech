@@ -92,8 +92,20 @@ def game(word, pokusy):
 
 def main():
     os.system("clear")
-    print(bold + orange + "Vítej u hry ŠIBENICE!" + reset)
-    time.sleep(3)
+    print(bold + orange +"""
+             __             
+|__| /\ |\ |/ _ |\/| /\ |\ |
+|  |/--\| \|\__)|  |/--\| \|
+
+Autor: Mejroslav Burýšek     
+                           
+Vítej u klasické hry Hangman, kterou v češtině známe pod názvem ŠIBENICE.
+""" + reset)
+    print("""V této hře budeš hádat neznámé slovo pomocí písmen. 
+Používáme českou diakritiku (háčky a čárky).
+Písmeno 'ch' se bere jako dvě různá písmena 'c'+'h'. """)
+    pause = input("Stiskni <ENTER> pro spuštění.")
+
     
     while True:
         os.system("clear")
