@@ -18,13 +18,13 @@ translation_table = {
     ord("Ú"): ord("U"),
     ord("Ů"): ord("U"),
     ord("Ý"): ord("Y"),
-    ord("Š"): ord("C"),
+    ord("Č"): ord("C"),
+    ord("Ď"): ord("D"),
+    ord("Ň"): ord("N"),
     ord("Ř"): ord("R"),
-    ord("Ž"): ord("Z"),
     ord("Š"): ord("S"),
     ord("Ť"): ord("T"),
-    ord("Ň"): ord("N"),
-    ord("Ď"): ord("D"),
+    ord("Ž"): ord("Z"),
 }
 
 def remove_diacritics(letter):
@@ -125,7 +125,7 @@ Písmeno 'ch' se bere jako dvě různá písmena 'c'+'h'. """)
         while True:
             again = input("Chceš hrát znovu? [a/n]").lower()
             if again in {"n", "ne", "nn", "no"}:
-                print("Nashledanou někdy příště!")
+                print("Na shledanou někdy příště!")
                 exit()
             elif again in {"a", "ano", "y", "yes"}:
                 break
