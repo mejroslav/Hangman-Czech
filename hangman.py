@@ -27,12 +27,14 @@ translation_table = {
     ord("Ž"): ord("Z"),
 }
 
-def remove_diacritics(letter):
-    "remove hooks and dashes"
-    return letter.translate(translation_table)
 
-def rnd_word(length: int):
-    "creates new czech word of the given length"
+def remove_diacritics(s: str) -> str:
+    """Remove hooks and dashes from a word or letter."""
+    return s.translate(translation_table)
+
+
+def rnd_word(length: int) -> str:
+    """Pick a random czech word of the length given."""
     with open("slova.txt", "r") as file:
         slova = file.read()
     slova = slova.split("\n")
@@ -41,13 +43,13 @@ def rnd_word(length: int):
         word = random.choice(slova).upper()
     return word
 
+
 def game(word, pokusy):
 
-    word = word.upper() # fixes trouble with small and big letters
+    word = word.upper()  # fixes trouble with small and big letters
     pokusy_zacatek = pokusy
     word_letters = set(remove_diacritics(word))
     used_letters = set()
-
 
     while len(word_letters) > 0 and pokusy > 0:
         time.sleep(1)
@@ -61,7 +63,8 @@ def game(word, pokusy):
             print(f"Zbývá ti {pokusy} pokusů.")
 
         print("Použitá písmena:", " ".join(used_letters))
-        word_list = [letter if remove_diacritics(letter) in used_letters else "-" for letter in word]
+        word_list = [letter if remove_diacritics(
+            letter) in used_letters else "-" for letter in word]
         print("Hádané slovo:", " ".join(word_list))
 
         user_letter = input("Hádej písmeno: ").upper()
@@ -75,24 +78,23 @@ def game(word, pokusy):
         used_letters.add(user_letter_without_diacritics)
         if user_letter_without_diacritics in word_letters:
             word_letters.remove(user_letter_without_diacritics)
-            print(green + "Správně!" + reset) 
+            print(green + "Správně!" + reset)
         else:
             pokusy -= 1
             print(red + "Špatně!" + reset)
 
     print("Hádané slovo bylo:", word)
-        
+
     if word_letters == set() and pokusy > 0:
-        print(green + "Vyhrál jsi! " + reset + f"Stačilo ti {pokusy_zacatek - pokusy} z {pokusy_zacatek} pokusů. Gratulujeme a tady máš klíčenku!")
+        print(green + "Vyhrál jsi! " + reset +
+              f"Stačilo ti {pokusy_zacatek - pokusy} z {pokusy_zacatek} pokusů. Gratulujeme a tady máš klíčenku!")
     elif pokusy == 0:
         print("Bohužel ti došly pokusy. " + red + "Prohrál jsi!" + reset)
 
 
-
-
 def main():
     os.system("clear")
-    print(bold + orange +"""
+    print(bold + orange + """
              __             
 |__| /\ |\ |/ _ |\/| /\ |\ |
 |  |/--\| \|\__)|  |/--\| \|
@@ -106,7 +108,6 @@ Používáme českou diakritiku (háčky a čárky).
 Písmeno 'ch' se bere jako dvě různá písmena 'c'+'h'. """)
     pause = input("Stiskni <ENTER> pro spuštění.")
 
-    
     while True:
         os.system("clear")
 
