@@ -2,11 +2,11 @@ import random
 import time
 import os
 
-reset = '\033[0m'
-bold = '\033[01m'
-orange = '\033[33m'
-red = '\033[31m'
-green = '\033[32m'
+reset = "\033[0m"
+bold = "\033[01m"
+orange = "\033[33m"
+red = "\033[31m"
+green = "\033[32m"
 
 
 translation_table = {
@@ -39,12 +39,18 @@ def rnd_word(length: int) -> str:
         slova = file.read()
     slova = slova.split("\n")
     word = ""
-    while len(word) != length: # keep guessing random word - need improvement!
+    while len(word) != length:  # keep guessing random word - need improvement!
         word = random.choice(slova).upper()
     return word
 
 
-def game(word, pokusy):
+def game(word: str, pokusy: int) -> None:
+    """Run the game.
+
+    Args:
+        word (_type_): the secret word
+        pokusy (_type_): number of attempts
+    """
 
     word = word.upper()  # fixes trouble with small and big letters
     pokusy_zacatek = pokusy
@@ -63,8 +69,10 @@ def game(word, pokusy):
             print(f"Zbývá ti {pokusy} pokusů.")
 
         print("Použitá písmena:", " ".join(used_letters))
-        word_list = [letter if remove_diacritics(
-            letter) in used_letters else "-" for letter in word]
+        word_list = [
+            letter if remove_diacritics(letter) in used_letters else "-"
+            for letter in word
+        ]
         print("Hádané slovo:", " ".join(word_list))
 
         user_letter = input("Hádej písmeno: ").upper()
@@ -86,15 +94,22 @@ def game(word, pokusy):
     print("Hádané slovo bylo:", word)
 
     if word_letters == set() and pokusy > 0:
-        print(green + "Vyhrál jsi! " + reset +
-              f"Stačilo ti {pokusy_zacatek - pokusy} z {pokusy_zacatek} pokusů. Gratulujeme a tady máš klíčenku!")
+        print(
+            green
+            + "Vyhrál jsi! "
+            + reset
+            + f"Stačilo ti {pokusy_zacatek - pokusy} z {pokusy_zacatek} pokusů. Gratulujeme a tady máš klíčenku!"
+        )
     elif pokusy == 0:
         print("Bohužel ti došly pokusy. " + red + "Prohrál jsi!" + reset)
 
 
-def main():
+def print_intro():
     os.system("clear")
-    print(bold + orange + """
+    print(
+        bold
+        + orange
+        + """
              __             
 |__| /\ |\ |/ _ |\/| /\ |\ |
 |  |/--\| \|\__)|  |/--\| \|
@@ -102,12 +117,26 @@ def main():
 Autor: Mejroslav Burýšek     
                            
 Vítej u klasické hry Hangman, kterou v češtině známe pod názvem ŠIBENICE.
-""" + reset)
-    print("""V této hře budeš hádat neznámé slovo pomocí písmen. 
+"""
+        + reset
+    )
+    print(
+        """V této hře budeš hádat neznámé slovo pomocí písmen. 
 Používáme českou diakritiku (háčky a čárky).
-Písmeno 'ch' se bere jako dvě různá písmena 'c'+'h'. """)
+Písmeno 'ch' se bere jako dvě různá písmena 'c'+'h'. """
+    )
+    print(
+        """Na začátku si zvolíš délku slova a počet pokusů. Uhodnutí správného písmene pokus neubírá."""
+    )
     pause = input("Stiskni <ENTER> pro spuštění.")
 
+
+
+def main():
+    """The main function."""
+
+    print_intro()
+    
     while True:
         os.system("clear")
 
@@ -124,7 +153,7 @@ Písmeno 'ch' se bere jako dvě různá písmena 'c'+'h'. """)
         game(slovo, pokusy)
 
         while True:
-            again = input("Chceš hrát znovu? [a/n]").lower()
+            again = input("Chceš hrát znovu? [a/n] ").lower()
             if again in {"n", "ne", "nn", "no"}:
                 print("Na shledanou někdy příště!")
                 exit()
@@ -134,5 +163,5 @@ Písmeno 'ch' se bere jako dvě různá písmena 'c'+'h'. """)
                 print("Zadej prosím odpověď ('a' = ano, 'n' = ne).")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
