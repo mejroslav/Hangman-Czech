@@ -43,6 +43,13 @@ def rnd_word(length: int) -> str:
         word = random.choice(slova).upper()
     return word
 
+def sort_characters(used_letters: set[str]) -> str:
+    """Print the characters sorted alphabetically.
+    >>> printable_characters({'a', 'k', 'm', 'b'})
+    a b k m
+    """
+    return " ".join(sorted(list(used_letters)))
+    
 
 def game(word: str, pokusy: int) -> None:
     """Run the game.
@@ -68,7 +75,7 @@ def game(word: str, pokusy: int) -> None:
         else:
             print(f"Zbývá ti {pokusy} pokusů.")
 
-        print("Použitá písmena:", " ".join(used_letters))
+        print(f"Použitá písmena: {sort_characters(used_letters)}")
         word_list = [
             letter if remove_diacritics(letter) in used_letters else "-"
             for letter in word
